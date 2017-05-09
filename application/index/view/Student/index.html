@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>学生管理</title>
+    <link rel="stylesheet" type="text/css" href="/public/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+</head>
+
+<body class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+            <div class="row">
+                <div class="col-md-8">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label class="sr-only" for="name">姓名</label>
+                            <input name="name" type="text" class="form-control" placeholder="姓名..." value="{$Request.get.name}">
+                        </div>
+                        <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</button>
+                    </form>
+                </div>
+                <div class="col-md-4 text-right">
+                    <a href="add" class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i>&nbsp;增加</a>
+                </div>
+            </div>
+            <hr />
+            <table class="table table-hover table-bordered">
+                <tr class="info">
+                    <th>序号</th>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>性别</th>
+                    <th>email</th>
+                    <td>创建时间</td>
+                    <th>班级</th>
+                    <th>辅导员</th>
+                    <th>操作</th>
+                </tr>
+                {volist name="students" id="student"}
+                <tr>
+                    <td>{$student->id}</td>
+                    <td>{$student->name}</td>
+                    <td>{$student->num}</td>
+                    <td>{$student->sex}</td>
+                    <td>{$student->email}</td>
+                    <td>{$student->create_time}</td>
+                    <td>{$student->klass->name}</td>
+                    <td>{$student->klass->teacher->name}</td>
+                    <td>
+                        <a class="btn btn-sm btn-primary" href="edit?id={$student.id}"><i class="glyphicon glyphicon-pencil"></i>&nbsp;编辑</a>&nbsp;&nbsp;
+                        <a class="btn btn-danger btn-sm" href="delete?id={$student.id}"><i class="glyphicon glyphicon-trash"></i>&nbsp;删除</a>
+                    </td>
+                </tr>
+                {/volist}
+            </table>
+            {$students->render()}
+        </div>
+    </div>
+</body>
+
+</html>
