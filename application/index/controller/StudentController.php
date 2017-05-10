@@ -3,6 +3,7 @@
 namespace app\index\controller;
 
 use app\common\model\Student;
+use app\common\model\Klass;
 use app\index\controller\IndexController;
 use think\Request;
 
@@ -23,67 +24,59 @@ class StudentController extends IndexController {
         $htmls = $this->fetch();
         return $htmls;
     }
-    
-    //添加班级
-    public function add(){
-        //获取所有教师
-        $teachers = Teacher::all();
-        $this->assign('teachers', $teachers);
-        
+
+    //添加学生
+    public function add() {
+        //获取所有班级
+        $klasses = Klass::all();
+        $this->assign('klasses', $klasses);
+
         return $this->fetch();
     }
-    
+
     //班级信息插入到数据库
-    public function insert(){
-        $class = Request::instance()->post();
-        $Klass = new Klass();
-        $Klass->name = $class['name'];
-        $Klass->teacher_id = $class['teacher_id'];
-        
-        if(!$Klass->validate(true)->save($Klass->getData())){
-            return $this->error('添加失败'. $Klass->getError());
+    public function insert() {
+        $postData = Request::instance()->post();
+        $Student = new Student();
+
+        if (!$Student->validate(true)->allowField(true)->save($postData)) {
+            return $this->error('添加失败' . $Student->getError());
         }
-        return $this->success('添加班级成功', 'index');
+        return $this->success('添加学生成功', 'index');
     }
-    
-    //编辑班级信息
-    public function edit(){
+
+    //编辑学生信息
+    public function edit() {
         $id = Request::instance()->param('id/d');
-        // 获取所有的教师信息
-        $teachers = Teacher::all();
-        $this->assign('teachers', $teachers);
-        
-        // 获取用户操作的班级信息
-        if (false === $Klass = Klass::get($id))
-        {
+
+        // 获取用户操作的学生信息
+        if (false === $Student = Student::get($id)) {
             return $this->error('系统未找到ID为' . $id . '的记录');
         }
 
-        $this->assign('Klass', $Klass);
+        $this->assign('Student', $Student);
         return $this->fetch();
     }
-    
+
     //编辑班级信息保存到数据库
-    public function update(){
-        $id = Request::instance()->post('id/d');
-        if(false === $Klass = Klass::get($id)){
+    public function update() {
+        $postData = Request::instance()->post();
+        if (false === $Student = Student::get($postData['id'])) {
             return $this->error('系统未找到ID为' . $id . '的记录');
         }
-        $Klass->name = Request::instance()->post('name');
-        $Klass->teacher_id = Request::instance()->post('teacher_id/d');
-        if(!$Klass->validate()->save()){
-            return $this->error('更新错误：'.$Klass->getError());
+        if (!$Student->validate()->allowField(true)->save($postData)) {
+            return $this->error('更新错误：' . $Student->getError());
         }
         return $this->success('更新成功！', 'index');
     }
-    
+
     //删除班级信息
-    public function delete(){
+    public function delete() {
         $id = Request::instance()->get('id/d');
         //查找是否存在该记录
-        $Klass = Klass::get($id);
-        if(!is_null($Klass) && !$Klass->delete()){
-            return $this->error('删除失败：'.$Klass->getError());
+        $Student = Student::get($id);
+        if (!is_null($Student) && !$Student->delete()) {
+            return $this->error('删除失败：' . $Student->getError());
         }
         return $this->success('删除成功！', 'index');
     }

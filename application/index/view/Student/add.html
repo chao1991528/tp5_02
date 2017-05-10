@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>添加学生</title>
+</head>
+
+<body class="contanier">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="insert" method="post">
+                <label>姓名:</label>
+                <input type="text" name="name" value="" />
+                <label>学号:</label>
+                <input type="text" name="num" value="" />
+                <label>性别:</label>
+                <input type="radio" name="sex" value="0" id="sex0" /><label for="sex0">男</label>
+                <input type="radio" name="sex" value="1" id="sex1" /><label for="sex1">女</label>
+                <label>班级</label>
+                <select name="klass_id">
+                {volist name="klasses" id="klass"}
+                    <option value="{$klass->id}">{$klass->name}</option>
+                {/volist}
+                </select>
+                <label>邮箱:</label>
+                <input type="email" name="email" value="" />
+                <button type="submit">保存</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
