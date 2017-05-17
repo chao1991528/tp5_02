@@ -6,6 +6,7 @@ use app\index\controller\IndexController;
 use think\Request;
 use app\common\model\Course;
 use app\common\model\Klass;
+use app\common\model\KlassCourse;
 
 /**
  * 课程控制器类
@@ -38,12 +39,31 @@ class CourseController extends IndexController {
 
     //课程信息插入到数据库
     public function insert() {
-        $postData = Request::instance()->post();
         $Course = new Course();
+        $Course->name = Request::instance()->post('name');
 
-        if (!$Course->validate(true)->allowField(true)->save($postData)) {
+        if (!$Course->validate(true)->save()) {
             return $this->error('添加失败' . $Course->getError());
         }
+        
+        $classIds = Request::instance()->post('klass_id/a');
+        if (!empty($classIds)) {
+            $datas = array();
+            foreach ($classIds as $classId) {
+                $data = array();
+                $data['klass_id'] = $classId;
+                $data['course_id'] = $Course->id;
+                $datas[] = $data;
+            }
+            //课程和班级的信息存到数据库
+            if (!empty($datas)) {
+                $KlassCourse = new KlassCourse;
+                if (!$KlassCourse->validate(true)->saveAll($datas)) {
+                    return $this->error('课程-班级信息保存错误：' . $KlassCourse->getError());
+                }
+            }
+        }
+
         return $this->success('添加成功', 'index');
     }
 

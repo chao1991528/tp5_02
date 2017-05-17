@@ -11,6 +11,10 @@
                     <label>课程名:</label>
                     <input type="hidden" name="id" value="{$Course->id}" />
                     <input type="text" name="name" value="{$Course->name}" />
+                    {volist name="Course->Klasses()->select()" id="klass"}
+                    <input type="checkbox" name="klass_id[]" id="klass_id_{$key}" value="{$klass->id}" {eq name="Course->getIsChecked($klass)" value="true"}checked="checked"{/eq}/>
+                        <label for="klass_id_{$key}">{$klass->name}</label>
+                    {/volist}
                     <button type="submit">保存</button>
                 </form>
             </div>
