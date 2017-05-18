@@ -75,7 +75,7 @@ class CourseController extends IndexController {
         if (false === $Course = Course::get($id)) {
             return $this->error('系统未找到ID为' . $id . '的记录');
         }
-
+        
         $this->assign('Course', $Course);
         return $this->fetch();
     }
